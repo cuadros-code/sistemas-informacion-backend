@@ -5,33 +5,52 @@ const assert = require('assert');
 // Connection URL
 const url = 'mongodb://localhost:27017';
 
-const getRegistration = (req, res) => {
 
+const obtenerResultados = (req, res) => {
+
+    console.log(req.body.AÑO);
+
+    let respuesta = []
+    let labels = []
 
     MongoClient.connect(url, { useUnifiedTopology: true }, async (err, client) => {
         assert.strictEqual(null, err);
         console.log("Connected successfully to server");
 
-        const db = client.db('sistemas-informaticos');
+        const db = client.db('si');
 
-        const collection = await db.collection('2010-2011')
+        const collection = db.collection('data-si')
 
         const total = await collection.countDocuments()
 
-        const yesContain = await collection.countDocuments({'I1R1C1': '1'})
-        const notContain = await collection.countDocuments({'I1R1C1': '2'})
+        if (req.body.AÑO) {
+            let consultaTotal = req.body.AÑO === 'todos' ? {} : { 'AÑO': req.body.AÑO }
+            const totalYear = await collection.countDocuments(consultaTotal)
+            respuesta.push(totalYear)
+            labels.push('# registros consultados')
+        }
+
+        let consultaYes = req.body
+        console.log(consultaYes);
+        const yes = await collection.countDocuments(consultaYes)
+        respuesta.push(yes)
+        labels.push('Si Adquirieron')
+        respuesta.push(respuesta[0] - yes)
+        labels.push('no Adquirieron')
+
 
         res.json({
             ok: true,
+            labels,
+            respuesta,
             total,
-            yesContain,
-            notContain
         })
 
-    });
-
+    })
 }
 
+
+
 module.exports = {
-    getRegistration
+    obtenerResultados
 }
