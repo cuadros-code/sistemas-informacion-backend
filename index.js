@@ -1,4 +1,5 @@
 const express = require('express')
+require('dotenv').config()
 const { obtenerResultados } = require('./controller/Controller2010-2011')
 const cors = require('cors')
 const app = express()
