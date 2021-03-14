@@ -3,8 +3,8 @@ const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
 
 // Connection URL
-const url = process.env.DB_STRING;
-
+// const url = process.env.DB_STRING;
+const url = 'mongodb://localhost:27017';
 
 const obtenerResultados = (req, res) => {
 
@@ -23,6 +23,19 @@ const obtenerResultados = (req, res) => {
 
         const total = await collection.countDocuments()
 
+        if (req.body.AÑO && Object.keys(req.body).length === 1) {
+            let consultaTotal = req.body.AÑO === 'todos' ? {} : { 'AÑO': req.body.AÑO }
+            const totalYear = await collection.countDocuments(consultaTotal)
+            respuesta.push(totalYear)
+            labels.push('# registros consultados')
+
+            return res.json({
+                ok: true,
+                labels,
+                respuesta,
+                total,
+            })
+        }
         if (req.body.AÑO) {
             let consultaTotal = req.body.AÑO === 'todos' ? {} : { 'AÑO': req.body.AÑO }
             const totalYear = await collection.countDocuments(consultaTotal)
