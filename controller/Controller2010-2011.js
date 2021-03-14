@@ -17,9 +17,11 @@ const obtenerResultados = (req, res) => {
         assert.strictEqual(null, err);
         console.log("Connected successfully to server");
 
-        const db = client.db();
+        // const db = client.db();
+        const db = client.db('si');
 
-        const collection = db.collection('si')
+        // const collection = db.collection('si')
+        const collection = db.collection('data-si')
 
         const total = await collection.countDocuments()
 
