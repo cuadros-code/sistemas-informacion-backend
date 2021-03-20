@@ -4,7 +4,6 @@ const assert = require('assert');
 
 // Connection URL
 const url = process.env.DB_STRING;
-// const url = 'mongodb://localhost:27017';
 
 const obtenerResultados = (req, res) => {
 
@@ -26,8 +25,9 @@ const obtenerResultados = (req, res) => {
         if (req.body.AÑO && Object.keys(req.body).length === 1) {
             let consultaTotal = req.body.AÑO === 'todos' ? {} : { 'AÑO': req.body.AÑO }
             const totalYear = await collection.countDocuments(consultaTotal)
-            respuesta.push(totalYear)
             labels.push('total registros consultados')
+            respuesta.push(totalYear)
+
             return res.json({
                 ok: true,
                 labels,
@@ -35,12 +35,9 @@ const obtenerResultados = (req, res) => {
                 total,
             })
         }
-
-        console.log(req.body, '1')
         if (req.body.AÑO === 'todos') {
             console.log('todos')
             delete req.body['AÑO']
-
             const totalYear = await collection.countDocuments()
             respuesta.push(totalYear)
             labels.push('# registros consultados')
@@ -65,11 +62,8 @@ const obtenerResultados = (req, res) => {
             respuesta,
             total,
         })
-
     })
 }
-
-
 
 module.exports = {
     obtenerResultados

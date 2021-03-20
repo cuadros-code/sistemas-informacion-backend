@@ -8,9 +8,7 @@ const PORT = process.env.PORT || 4001
 app.use(cors())
 app.use(express.json())
 
-
 app.post('/si', obtenerResultados)
-
 
 app.listen(PORT, () => {
     console.log(`server on port ${PORT}`);
